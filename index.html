@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Musinsa Price Tracker - Goods List</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    
+        <style>
+            * {
+                text-align: center;
+            }
+    
+            .background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                z-index: -1;
+                opacity: 0;
+            }
+    
+            .show {
+                opacity: 1;
+                z-index: 1000;
+                transition: all 0.5s;
+            }
+    
+            .window {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+    
+            .popup {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #ffffff;
+                box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+                width: 50vw;
+                height: 70vh;
+                padding: 20px;
+                transform: translate(-50%, -40%);
+            }
+    
+            .show .popup {
+                transform: translate(-50%, -50%);
+                transition: all 0.5s;
+    
+            .btn {
+                height: 50px;
+                width: 30vw;
+                border-radius: 7px;
+                border-width: 2px;
+                background-color: white;
+                cursor: pointer;
+                font-weight: bold;
+            }
+    
+            .form-login {
+                padding: 10px;
+            }
+    
+            #kakao {
+                border-color: yellow;
+            }
+    
+            #google {
+                border-color: rgb(233, 131, 131);
+            }
+    
+            #naver {
+                border-color: rgb(143, 236, 143);
+            }
+    
+            #close {
+                background: none;
+                border: none;
+                height: 30px;
+                cursor: pointer;
+                text-decoration: underline;
+                font-style: italic;
+            }
+        }
+        </style>
+    
+    
+    </head>
+    <body>
+        
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#!">Musinsa Price Tracker</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#!">All Products</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <a id="login" class="btn btn-outline-dark" type="submit">
+                            login
+                        </a>
+                    </form>
+                    <div class="background">
+                        <div class="window">
+                            <div class="popup">
+                                <h1>LOGIN</h1><br>
+                                <p style="color: rgb(83, 82, 82);">SNS 계정으로 로그인하여 모든 서비스를 이용하세요.</p><br>
+                                <form class="form-login" th:action="@{/login/kakao}" method="post">
+                                    <button id="kakao" class="btn" type="submit">
+                                        <div>
+                                            <img src="img\kakao.png" style="width: 20px; float: left;">
+                                            <span>카카오로 시작하기</aspan>
+                                        </div>
+                                    </button>
+                                </form>
+                                <form class="form-login" th:action="@{/login/google}" method="post">
+                                    <button id="google" class="btn" type="submit">
+                                        <div>
+                                            <img src="img\google.png" style="width: 20px; float: left;">
+                                            <span>구글로 시작하기</span>
+                                        </div>
+                                    </button>
+                                </form>
+                                <form class="form-login" th:action="@{/login/naver}" method="post">
+                                    <button id="naver" class="btn" type="submit">
+                                        <div>
+                                            <img src="img\naver.png" style="width: 20px; float: left;">
+                                            <span>네이버로 시작하기</span>
+                                        </div>
+                                    </button>
+                                </form>
+                                <br>
+                                <button id="close">비회원으로 진행하시겠습니까?</button>
+                            </div>
+                            <div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <script>
+                        function show() {
+                            document.querySelector(".background").className = "background show";
+                        }
+                
+                        function close() {
+                            document.querySelector(".background").className = "background";
+                        }
+                
+                        document.querySelector("#login").addEventListener("click", show);
+                        document.querySelector("#close").addEventListener("click", close);
+                
+                        document.querySelector("body").addEventListener("click", function (e) {
+                            if (e.target.className == e.currentTarget.querySelector(".window").className) {
+                                close()
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </nav>        
+
+        <!-- Header-->
+        <header class=" bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-primary">
+                    <h1 class="display-4 fw-bolder">Musinsa Price Tracker</h1>
+                    <p class="lead fw-normal text-primary-50 mb-0">Buy cheaply through this shop hompeage</p>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Section-->
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="wrapper">
+                    
+                </div>
+            </div>
+        </section>
+
+        <script inline="javascript">
+            (async () => {
+                var url = "http://mpt-api-server.com/login/kakao";
+                const kakaodata = await fetch(url).then(response => response.json());
+
+                var url = "http://mpt-api-server.com/login/naver";
+                const naverdata = await fetch(url).then(response => response.json());
+                
+                var url = "http://mpt-api-server.com/login/google";
+                const googledata = await fetch(url).then(response => response.json());
+
+            })();
+
+            (async () => {
+                var url = "http://mpt-api-server.com/goods";
+                const data = await fetch(url).then(response => response.json());
+        
+                var goodstbody = document.getElementById("wrapper");
+        
+                for(key in data) {
+                    var goods_id = data[key]['id'];
+                    var goods_name = data[key]['name'];
+                    var goods_name = data[key]['name'];
+                    var goods_del_price = data[key]['del_price'];
+                    var goods_price = data[key]['price'];
+                    var goods_img = data[key]['img'];
+        
+                    var col = document.createElement("div");
+                    col.className = 'col mb-5';
+                    var card = document.createElement("div");
+                    card.className = 'card h-100';
+                    var badge = document.createElement("div");
+                    badge.className = 'badge bg-dark text-white position-absolute';
+                    var card_img_top = document.createElement("img");
+                    card_img_top.className = 'card-img-top';
+                    card_img_top.src = "https:" + goods_img;
+        
+                    var card_body = document.createElement("div");
+                    card_body.className = 'card-body p-4';
+                    var text_center = document.createElement("div");
+                    text_center.className = 'text-center';
+        
+                    var fw_bolder = document.createElement("h5");
+                    fw_bolder.className = 'fw-bolder';
+                    fw_bolder.innerText = goods_name;
+                    var text_muted = document.createElement("span");
+                    text_muted.className = 'text-muted text-decoration-line-through';
+                    text_muted.innerHTML = goods_del_price;
+                    var text_unmuted = document.createElement("span");
+                    text_unmuted.innerHTML = goods_price;
+
+                    var card_footer = document.createElement("div");
+                    card_footer.className = 'card-footer p-4 pt-0 border-top-0 bg-transparent';
+                    var btn_outline_dark = document.createElement("a");
+                    btn_outline_dark.className = 'btn btn-outline-dark mt-auto';
+
+                    console.log(document.getElementsByClassName('btn btn-outline-dark mt-auto'))
+                    document.querySelectorAll(".btn btn-outline-dark mt-auto").setAttribute('href','/goods_detail.html');
+                    document.getElementsByClassName('btn btn-outline-dark mt-auto').setAttribute('href','/goods_detail.html');
+                    btn_outline_dark.setAttribute('href','goods_detail.html');
+                    btn_outline_dark.setAttribute('target', '_self');
+                    btn_outline_dark.setAttribute('id', 'detail');
+                    btn_outline_dark.setAttribute('type','submit');
+                    btn_outline_dark.setAttribute('data-value', goods_id);
+                    btn_outline_dark.innerText = "more detail";
+                    
+                    // var list, index;
+                    // list = document.getElementsByClassName("btn btn-outline-dark mt-auto");
+                    // for (index = 0; index < list.length; ++index) {
+                    //     list[index].setAttribute('href','/goods_detail.html');
+                    // }
+                    
+                    
+                    text_center.appendChild(fw_bolder);
+                    text_center.appendChild(text_muted);
+                    text_center.appendChild(text_unmuted);
+                    card_body.appendChild(text_center);
+                    card_footer.appendChild(btn_outline_dark);
+                    card.appendChild(badge);
+                    card.appendChild(card_img_top);
+                    card.appendChild(card_body);
+                    card.appendChild(card_footer);
+                    col.appendChild(card);
+                    goodstbody.appendChild(col);
+                }
+                
+            })();
+        
+        </script>
+        
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container"><p class="m-0 text-center text-primary">Copyright &copy; Your Website 2023</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
