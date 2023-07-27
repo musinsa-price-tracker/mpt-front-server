@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Musinsa Price Tracker - Goods Details</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hahmlet&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="loginStyle.css">
+
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
     <!-- CSS Styles -->
     <style>
         body {
-            font-family: "Hahmlet", sans-serif;
             background-color: #ffffff;
         }
 
@@ -21,20 +28,23 @@
         }
 
         .product-image {
-            width: 40%;
+            width: 45%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
             object-fit: contain;
             border-radius: 8px;
         }
 
         .product-info h2 {
-            font-size: 28px;
+            font-size: 30px;
             font-weight: bold;
             color: #333;
             margin-bottom: 10px;
         }
 
         .product-info p {
-            font-size: 18px;
+            font-size: 20px;
             color: #777;
             margin-bottom: 5px;
         }
@@ -54,192 +64,424 @@
         }
     </style>
 </head>
+
 <body>
-<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html">Musinsa Price Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#!">All Products</a></li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                            <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <a id="login" class="btn btn-outline-dark btncolor" type="submit" style="border: 1px solid #ced4da">
+                        login
+                    </a>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <img id="goods_img" class="img-fluid rounded product-image" alt="Product Image">
+                </div>
+                <div class="col-md-6 product-info">
+                    <h2 id="goods_name"></h2>
+                    <p id="goods_del_price">판매가: </p>
+                    <p id="goods_price">할인가: </p>
+                    <p class="rating" id="goods_rating"></p>
+                    <p id="goods_rating_count">평가 수: </p>
+                    <a id="goods_url" target="_blank" class="btn btn-outline-primary btn-lg link-button">무신사에서 보기</a>
+                    <a class="btn btn-outline-primary btn-lg link-button" target="_blank" data-toggle="modal"
+                        data-target="#guestModal" data-whatever="@email">가격 알림 받기</a>
+
+                    <div class="modal fade" id="guestModal" tabindex="-1" role="dialog"
+                        aria-labelledby="guestModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="guestModalLabel">가격 알림 받기</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="goods_price" class="col-form-label">원하는 가격을 설정하세요.</label>
+                                            <input type="number" min="0" class="form-control" id="guestPriceInput"
+                                                step="100">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="alarm">받기</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <img th:src="${goods.img}" class="img-fluid rounded product-image" alt="Product Image">
-            </div>
-            <div class="col-md-6 product-info">
-                <h2>[[${goods.name}]]</h2>
-                <p>판매가: [[${goods.del_price}]]</p>
-                <p>할인가: [[${goods.price}]]</p>
-                <p class="rating" th:data-rating="${goods.rating}"></p>
-                <p>평가 수: [[${goods.rating_count}]]</p>
-                <a th:href="${goods.url}" target="_blank" class="btn btn-outline-primary link-button">무신사에서 보기</a>
+            <div class="col-md-12">
+                <div id="container"></div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div id="container"></div>
-        </div>
-    </div>
-</div>
+    <div class="background">
+        <div class="window">
+            <div class="popup">
+                <h1 class="display-5 fw-bolder">LOGIN</h1><br>
+                <p style="color: rgb(83, 82, 82);">SNS 계정으로 로그인하여 모든 서비스를 이용하세요.</p><br>
+                <div id="socialLoginDiv"></div>
+                <br>
+                <button class="fw-bolder" id="close">비회원으로 진행하시겠습니까?</button>
+            </div>
+            <div>
+                <div>
+                </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-3d.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
+                <script src="https://code.highcharts.com/highcharts.js"></script>
+                <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+                <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // Function to generate star icons based on the numeric rating
-    function generateStarRating(rating) {
-        const ratingScale = rating / 20;
-        const stars = '<i class="fas fa-star" style="color: #ff9300;"></i>'.repeat(Math.floor(ratingScale));
-        const halfStar = ratingScale % 1 >= 0.5 ? '<i class="fas fa-star-half-alt" style="color: #ff9300;"></i>' : '';
-        const emptyStars = '<i class="far fa-star" style="color: #ff9300;"></i>'.repeat(5 - Math.ceil(ratingScale));
-        return stars + halfStar + emptyStars;
-    }
+                <script src="mpt.js"></script>
+                <script src="loginCheck.js"></script>
+                <script>
+
+                    const div = document.getElementById("socialLoginDiv");
+                    var KakaoLoginBtn = loginbtn("Kakao", mpt_login_trigger);
+                    div.appendChild(KakaoLoginBtn);
+
+                    var GoogleLoginBtn = loginbtn("Google", mpt_login_trigger);
+                    div.appendChild(GoogleLoginBtn);
+
+                    var NaverLoginBtn = loginbtn("Naver", mpt_login_trigger);
+                    div.appendChild(NaverLoginBtn);
+
+                    function loginbtn(socialLoginType, call_back_func) {
+                        var btn = create_mpt_login_btn(socialLoginType, call_back_func);
+                        btn.id = 'btn';
+                        btn.className = "btn btn-outline-dark";
+                        btn.setAttribute('style', 'border: 1px solid #ced4da');
+
+                        var div = document.createElement("div");
+                        var img = document.createElement("img");
+                        img.src = "img/" + socialLoginType + ".png";
+                        img.setAttribute('style', 'width: 35px; float: left')
+
+                        var span = document.createElement("span");
+                        span.innerText = socialLoginType + "로 시작하기";
+
+                        div.appendChild(img);
+                        div.appendChild(span);
+                        btn.appendChild(div);
+                        return btn;
+                    }
+
+                    function show() {
+                        document.querySelector(".background").className = "background show";
+                    }
+
+                    function close() {
+                        document.querySelector(".background").className = "background";
+                    }
+
+                    function logout() {
+                        alert("로그아웃 되었습니다.");
+                        window.localStorage.setItem('token', '');
+                        var loginsuccess = document.getElementById("login")
+                        loginsuccess.innerText = "login";
+                        loginsuccess.removeEventListener("click", logout);
+                        loginsuccess.addEventListener("click", show);
+                        window.location.reload();
+                    }
+
+                    window.onload = function() {
+                        (async () => {
+                            const token = window.localStorage.getItem('token');
+                            var tmp = CheckLogin();
+                            console.log(token);
+                            console.log(tmp);
+                            if(await CheckLogin()==false) {
+                                document.querySelector("#login").addEventListener("click", show);
+                                document.querySelector("#close").addEventListener("click", close)
+                                document.querySelector("body").addEventListener("click", function (e) {
+                                    if (e.target.className == e.currentTarget.querySelector(".window").className) {
+                                        close()
+                                    }
+                                });
+                            }
+                            else {
+                                var loginsuccess = document.getElementById("login")
+                                loginsuccess.innerText = "logout";
+                                loginsuccess.removeEventListener("click", show);
+                                loginsuccess.addEventListener("click", logout);
+                            }
+                        })();
+                    }
+                    
+                    function mpt_login_trigger(loginParam) {
+                        console.log(loginParam.data['token']);
+                        window.localStorage.setItem('status', loginParam.data['status']);
+                        window.localStorage.setItem('token', loginParam.data['token']);
+                        window.localStorage.setItem('email', loginParam.data['email']);
+                        window.localStorage.setItem('platform', loginParam.data['platform']);
+                        if (loginParam.data['status'] === 'Login Success') {
+                            close();
+                            alert("로그인이 완료되었습니다.");
+
+                            var loginsuccess = document.getElementById("login")
+                            loginsuccess.innerText = "logout";
+                            loginsuccess.removeEventListener("click", show);
+                            loginsuccess.addEventListener("click", logout);
+                            window.location.reload();
+                        }
+                    }
+
+                </script>
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    // Function to generate star icons based on the numeric rating
+                    function generateStarRating(rating) {
+                        const ratingScale = rating / 20;
+                        const stars = '<i class="fas fa-star" style="color: #ff9300;"></i>'.repeat(Math.floor(ratingScale));
+                        const halfStar = ratingScale % 1 >= 0.5 ? '<i class="fas fa-star-half-alt" style="color: #ff9300;"></i>' : '';
+                        const emptyStars = '<i class="far fa-star" style="color: #ff9300;"></i>'.repeat(5 - Math.ceil(ratingScale));
+                        return stars + halfStar + emptyStars;
+                    }
 
     // Get the star ratings elements and update them with the corresponding star icons
-    $(document).ready(function () {
-        $('.rating').each(function () {
-            const rating = parseFloat($(this).data('rating'));
-            $(this).html(generateStarRating(rating));
-        });
-    });
-</script>
+    // $(document).ready(function () {
+    //     $('.rating').each(function () {
+    //         const rating = parseFloat($(this).data('rating'));
+    //         $(this).html(generateStarRating(rating));
+    //     });
+    // });
+                </script>
 
-<script th:inline="javascript">
-    (async () => {
+                <script>
+                    
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const token = window.localStorage.getItem('token');
+                    var gid = urlParams.get('goods_id');
+                    console.log(gid);
+                    document.querySelector("#alarm").addEventListener("click", send);
 
-        // musinsa data JSON
-        const data = await fetch(
-            `http://localhost:8080/db/goods/[[${goods.id}]]`
-        ).then(response => response.json());
-
-        // test data JSON
-        // const data = await fetch(
-        //     'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v10.3.3/samples/data/usdeur.json'
-        // ).then(response => response.json());
-
-        Highcharts.setOptions({
-            lang: {
-                thousandsSep: ","
-            }
-            , exporting: {
-                menuItemDefinitions: {
-                    printChart: {
-                        text: "차트 인쇄",
-                        onclick: function () {
-                            this.print();
+                    async function send() {
+                        if(await CheckLogin()==false) {
+                            alert("로그인이 필요한 서비스입니다.");
                         }
-                    },
-                    downloadPNG: {
-                        text: "다운로드 PNG",
-                        onclick: function () {
-                            this.exportChart();
+                        else {
+                            const url = "http://mpt-api-server.com/goods/" + gid + "/alarm";
+                            console.log(url);
+                            const data = await fetch(url, {
+                                method: "POST",
+                                headers: {
+                                    Authorization: 'Bearer ' + token
+                                }
+                            }).then(response => console.log(response));
+                            alert("알림이 정상적으로 신청되었습니다.");
                         }
                     }
-                    , downloadJPEG: {
-                        text: "다운로드 JPG",
-                        onclick: function () {
-                            this.exportChart({
-                                type: 'image/jpeg'
-                            });
-                        }
-                    }
-                    , downloadPDF: {
-                        text: "다운로드 PDF",
-                        onclick: function () {
-                            this.exportChart({
-                                type: 'application/pdf'
-                            });
-                        }
-                    }
-                    , downloadSVG: {
-                        text: "다운로드 SVG",
-                        onclick: function () {
-                            this.exportChart({
-                                type: 'image/svg+xml'
-                            });
-                        }
-                    }
-                },
-                buttons: {
-                    contextButton: {
-                        menuItems: ["printChart", "separator", "downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG"]
-                    }
-                }
-            }
-        });
 
-        Highcharts.chart('container', {
-            chart: {
-                zoomType: 'x'
-            },
-            title: {
-                text: [[${goods.name}]] ,
-                align: 'left'
-            },
-            subtitle: {
-                text: document.ontouchstart === undefined ?
-                    '확대하고 싶은 구역을 클릭 & 드래그 하세요.' : '확대하고 싶은 구역을 선택하세요.',
-                align: 'left'
-            },
-            xAxis: {
-                type: 'datetime'
-            },
-            yAxis: {
-                title: {
-                    text: '가격'
-                },
-                labels: {
-                    formatter: function() {
-                        return this.value.toLocaleString();
+                    function numberWithCommas(x) {
+                        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     }
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            credits: {
-                enabled: false
-            },
-            plotOptions: {
-                area: {
-                    fillColor: {
-                        linearGradient: {
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 1
-                        },
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                        ]
-                    },
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    threshold: null
-                }
-            },
-            series: [{
-                type: 'area',
-                name: '가격',
-                data: data
-            }]
-        });
-    })();
 
-</script>
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+                    (async () => {
+                        const url = "http://mpt-api-server.com/goods/" + gid;
+                        const data = await fetch(url).then(response => response.json());
+
+                        const goods_name = data['name'];
+                        const goods_del_price = data['del_price'];
+                        const goods_price = data['price'];
+                        const goods_rating = data['rating'];
+                        const goods_rating_count = data['rating_count'];
+                        const goods_url = data['url'];
+                        const goods_img = data['img'];
+
+                        const goods_name_elem = document.getElementById("goods_name");
+                        goods_name_elem.innerText = goods_name;
+                        const goods_del_price_elem = document.getElementById("goods_del_price")
+                        goods_del_price_elem.innerHTML += numberWithCommas(goods_del_price) + "원";
+                        const goods_price_elem = document.getElementById("goods_price");
+                        goods_price_elem.innerHTML += numberWithCommas(goods_price) + "원";
+                        const goods_rating_elem = document.getElementById("goods_rating");
+                        goods_rating_elem.innerHTML += generateStarRating(goods_rating);
+                        const goods_rating_count_elem = document.getElementById("goods_rating_count");
+                        goods_rating_count_elem.innerHTML += goods_rating_count + "개";
+                        const goods_img_elem = document.getElementById("goods_img");
+                        goods_img_elem.src = "https:" + goods_img;
+                        const goods_url_elem = document.getElementById("goods_url");
+                        goods_url_elem.href = "https:" + goods_url;
+
+                        document.getElementById("guestPriceInput").setAttribute("value", goods_price);
+
+                    })();
+
+                    (async () => {
+                        const url = "http://mpt-api-server.com/goods/chart/" + gid;
+
+                        // musinsa data JSON
+                        const data = await fetch(url, {
+                            headers: {
+                                Authorization: 'Bearer ' + token
+                            }
+                        }).then(response => response.json());
+
+                        // test data JSON
+                        // const data = await fetch(
+                        //     'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v10.3.3/samples/data/usdeur.json'
+                        // ).then(response => response.json());
+
+                        Highcharts.setOptions({
+                            lang: {
+                                thousandsSep: ","
+                            }
+                            , exporting: {
+                                menuItemDefinitions: {
+                                    printChart: {
+                                        text: "차트 인쇄",
+                                        onclick: function () {
+                                            this.print();
+                                        }
+                                    },
+                                    downloadPNG: {
+                                        text: "다운로드 PNG",
+                                        onclick: function () {
+                                            this.exportChart();
+                                        }
+                                    }
+                                    , downloadJPEG: {
+                                        text: "다운로드 JPG",
+                                        onclick: function () {
+                                            this.exportChart({
+                                                type: 'image/jpeg'
+                                            });
+                                        }
+                                    }
+                                    , downloadPDF: {
+                                        text: "다운로드 PDF",
+                                        onclick: function () {
+                                            this.exportChart({
+                                                type: 'application/pdf'
+                                            });
+                                        }
+                                    }
+                                    , downloadSVG: {
+                                        text: "다운로드 SVG",
+                                        onclick: function () {
+                                            this.exportChart({
+                                                type: 'image/svg+xml'
+                                            });
+                                        }
+                                    }
+                                },
+                                buttons: {
+                                    contextButton: {
+                                        menuItems: ["printChart", "separator", "downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG"]
+                                    }
+                                }
+                            }
+                        });
+
+                        Highcharts.chart('container', {
+                            chart: {
+                                zoomType: 'x'
+                            },
+                            title: {
+                                text: "",
+                                align: 'left'
+                            },
+                            subtitle: {
+                                text: document.ontouchstart === undefined ?
+                                    '확대하고 싶은 구역을 클릭 & 드래그 하세요.' : '확대하고 싶은 구역을 선택하세요.',
+                                align: 'left'
+                            },
+                            xAxis: {
+                                type: 'datetime'
+                            },
+                            yAxis: {
+                                title: {
+                                    text: '가격'
+                                },
+                                labels: {
+                                    formatter: function () {
+                                        return this.value.toLocaleString();
+                                    }
+                                }
+                            },
+                            legend: {
+                                enabled: false
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            plotOptions: {
+                                area: {
+                                    fillColor: {
+                                        linearGradient: {
+                                            x1: 0,
+                                            y1: 0,
+                                            x2: 0,
+                                            y2: 1
+                                        },
+                                        stops: [
+                                            [0, Highcharts.getOptions().colors[0]],
+                                            [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                                        ]
+                                    },
+                                    marker: {
+                                        radius: 2
+                                    },
+                                    lineWidth: 1,
+                                    states: {
+                                        hover: {
+                                            lineWidth: 1
+                                        }
+                                    },
+                                    threshold: null
+                                }
+                            },
+                            series: [{
+                                type: 'area',
+                                name: '가격',
+                                data: data
+                            }]
+                        });
+                    })();
+
+                </script>
+                <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
+
 </html>
