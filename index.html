@@ -7,97 +7,17 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Musinsa Price Tracker - Goods List</title>
+        <script src="mpt.js"></script>
+        <script src="loginCheck.js"></script>
+
+
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
-    
-        <style>
-            * {
-                text-align: center;
-            }
-    
-            .background {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100vh;
-                background-color: rgba(0, 0, 0, 0.3);
-                z-index: 1000;
-                z-index: -1;
-                opacity: 0;
-            }
-    
-            .show {
-                opacity: 1;
-                z-index: 1000;
-                transition: all 0.5s;
-            }
-    
-            .window {
-                position: relative;
-                width: 100%;
-                height: 100%;
-            }
-    
-            .popup {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: #ffffff;
-                box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
-                width: 50vw;
-                height: 70vh;
-                padding: 20px;
-                transform: translate(-50%, -40%);
-            }
-    
-            .show .popup {
-                transform: translate(-50%, -50%);
-                transition: all 0.5s;
-    
-            .btn {
-                height: 50px;
-                width: 30vw;
-                border-radius: 7px;
-                border-width: 2px;
-                background-color: white;
-                cursor: pointer;
-                font-weight: bold;
-            }
-    
-            .form-login {
-                padding: 10px;
-            }
-    
-            #kakao {
-                border-color: yellow;
-            }
-    
-            #google {
-                border-color: rgb(233, 131, 131);
-            }
-    
-            #naver {
-                border-color: rgb(143, 236, 143);
-            }
-    
-            #close {
-                background: none;
-                border: none;
-                height: 30px;
-                cursor: pointer;
-                text-decoration: underline;
-                font-style: italic;
-            }
-        }
-        </style>
-    
-    
+        <link rel="stylesheet" href="loginStyle.css">
     </head>
     <body>
         
@@ -118,73 +38,138 @@
                             </ul>
                         </li>
                     </ul>
+                    <form class="me-md-3 my-2 my-md-0">
+                        <div class="input-group">
+                            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                            <button class="btn btn-dark" id="btnNavbarSearch" type="button">Search</button>
+                        </div>
+                    </form>
                     <form class="d-flex">
-                        <a id="login" class="btn btn-outline-dark" type="submit">
+                        <a id="login" class="btn btn-outline-dark btncolor" type="submit" style="border: 1px solid #ced4da">
                             login
                         </a>
                     </form>
-                    <div class="background">
-                        <div class="window">
-                            <div class="popup">
-                                <h1>LOGIN</h1><br>
-                                <p style="color: rgb(83, 82, 82);">SNS 계정으로 로그인하여 모든 서비스를 이용하세요.</p><br>
-                                <form class="form-login" th:action="@{/login/kakao}" method="post">
-                                    <button id="kakao" class="btn" type="submit">
-                                        <div>
-                                            <img src="img\kakao.png" style="width: 20px; float: left;">
-                                            <span>카카오로 시작하기</aspan>
-                                        </div>
-                                    </button>
-                                </form>
-                                <form class="form-login" th:action="@{/login/google}" method="post">
-                                    <button id="google" class="btn" type="submit">
-                                        <div>
-                                            <img src="img\google.png" style="width: 20px; float: left;">
-                                            <span>구글로 시작하기</span>
-                                        </div>
-                                    </button>
-                                </form>
-                                <form class="form-login" th:action="@{/login/naver}" method="post">
-                                    <button id="naver" class="btn" type="submit">
-                                        <div>
-                                            <img src="img\naver.png" style="width: 20px; float: left;">
-                                            <span>네이버로 시작하기</span>
-                                        </div>
-                                    </button>
-                                </form>
-                                <br>
-                                <button id="close">비회원으로 진행하시겠습니까?</button>
-                            </div>
+
+                        <div class="background">
+                            <div class="window">
+                                <div class="popup">
+                                    <h1 class="display-5 fw-bolder">LOGIN</h1><br>
+                                    <p style="color: rgb(83, 82, 82);">SNS 계정으로 로그인하여 모든 서비스를 이용하세요.</p><br>
+                                    <div id="socialLoginDiv"></div>
+                                    <br>
+                                    <button class="fw-bolder" id="close">비회원으로 진행하시겠습니까?</button>
+                                </div>
+                                <div>
                             <div>
-                                <div></div>
-                            </div>
                         </div>
-                    </div>
+                        <script>
                 
-                    <script>
-                        function show() {
-                            document.querySelector(".background").className = "background show";
-                        }
+                            const div = document.getElementById("socialLoginDiv");
+                            var KakaoLoginBtn = loginbtn("Kakao",mpt_login_trigger);
+                            div.appendChild(KakaoLoginBtn);
+                    
+                            var GoogleLoginBtn = loginbtn("Google",mpt_login_trigger);
+                            div.appendChild(GoogleLoginBtn);
+                    
+                            var NaverLoginBtn = loginbtn("Naver",mpt_login_trigger);
+                            div.appendChild(NaverLoginBtn);
+                    
+                            function loginbtn(socialLoginType, call_back_func){
+                                var btn = create_mpt_login_btn(socialLoginType, call_back_func);
+                                btn.id = 'btn';
+                                btn.className = "btn btn-outline-dark";
+                                btn.setAttribute('style','border: 1px solid #ced4da');
+                                
+                                var div = document.createElement("div");
+                                var img = document.createElement("img");
+                                img.src = "img/" +socialLoginType+ ".png";
+                                img.setAttribute('style','width: 35px; float: left')
                 
-                        function close() {
-                            document.querySelector(".background").className = "background";
-                        }
-                
-                        document.querySelector("#login").addEventListener("click", show);
-                        document.querySelector("#close").addEventListener("click", close);
-                
-                        document.querySelector("body").addEventListener("click", function (e) {
-                            if (e.target.className == e.currentTarget.querySelector(".window").className) {
-                                close()
+                                var span = document.createElement("span");
+                                span.innerText = socialLoginType + "로 시작하기";
+                    
+                                div.appendChild(img);
+                                div.appendChild(span);
+                                btn.appendChild(div);
+                                return btn;
                             }
-                        })
-                    </script>
+                            
+                            function show() {
+                                document.querySelector(".background").className = "background show";
+                            }
+                        
+                            function close() {
+                                document.querySelector(".background").className = "background";
+                            }
+                        
+                            function logout() {
+                                alert("로그아웃 되었습니다.");
+                                window.localStorage.setItem('token', '');
+                                var loginsuccess = document.getElementById("login")
+                                loginsuccess.innerText = "login";
+                                loginsuccess.removeEventListener("click", logout);
+                                loginsuccess.addEventListener("click", show);
+                                window.location.reload();
+                            }
+
+                            window.onpopstate = function(event) {
+                                window.location.reload();
+                            }
+
+                            window.onload = function() {
+                                (async () => {
+                                    const token = window.localStorage.getItem('token');
+                                    console.log(token);
+                                    console.log(localStorage.getItem('status'));
+                                    var tmp = await CheckLogin();
+                                    
+                                    if(await CheckLogin()==false) {
+                                        document.querySelector("#login").addEventListener("click", show);
+                                        document.querySelector("#close").addEventListener("click", close);
+
+                                        document.querySelector("body").addEventListener("click", function (e) {
+                                            if (e.target.className == e.currentTarget.querySelector(".window").className) {
+                                                close()
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        var loginsuccess = document.getElementById("login")
+                                        loginsuccess.innerText = "logout";
+                                        loginsuccess.removeEventListener("click", show);
+                                        loginsuccess.addEventListener("click", logout);
+                                        document.getElementById("usermail").innerText = window.localStorage.getItem('email');
+                                    }
+                                
+                                })();
+                            }
+
+                            function mpt_login_trigger(loginParam){
+                                console.log(loginParam.data['token']);
+                                window.localStorage.setItem('status', loginParam.data['status']);
+                                window.localStorage.setItem('token', loginParam.data['token']);
+                                window.localStorage.setItem('email', loginParam.data['email']);
+                                window.localStorage.setItem('platform', loginParam.data['platform']);
+                                if(loginParam.data['status'] === 'Login Success'){
+                                    close();
+                                    alert("로그인이 완료되었습니다.");
+                                    
+                                    var loginsuccess = document.getElementById("login")
+                                    loginsuccess.innerText = "logout";
+                                    loginsuccess.removeEventListener("click", show);
+                                    loginsuccess.addEventListener("click", logout);
+                                    document.getElementById("usermail").innerText = window.localStorage.getItem('email');
+                                    window.location.reload();
+                                }
+                            }
+                
+                        </script>
                 </div>
             </div>
         </nav>        
 
         <!-- Header-->
-        <header class=" bg-dark py-5">
+        <header class=" bg-light py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-primary">
                     <h1 class="display-4 fw-bolder">Musinsa Price Tracker</h1>
@@ -201,34 +186,31 @@
                 </div>
             </div>
         </section>
+        <div id="pageNumbers" class="d-flex justify-content-center mt-3"></div>
 
         <script inline="javascript">
-            (async () => {
-                var url = "http://mpt-api-server.com/login/kakao";
-                const kakaodata = await fetch(url).then(response => response.json());
+            // function to print commas every thousands for prices ex) 1,000,000
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            
+            const itemsPerPage = 40;
+            let data = [];
 
-                var url = "http://mpt-api-server.com/login/naver";
-                const naverdata = await fetch(url).then(response => response.json());
-                
-                var url = "http://mpt-api-server.com/login/google";
-                const googledata = await fetch(url).then(response => response.json());
+            function renderPage(pageNumber, itemsPerPage, data) {
+                const startIndex = (pageNumber - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, data.length);
 
-            })();
-
-            (async () => {
-                var url = "http://mpt-api-server.com/goods";
-                const data = await fetch(url).then(response => response.json());
-        
                 var goodstbody = document.getElementById("wrapper");
-        
-                for(key in data) {
+                goodstbody.innerHTML = ''; // Clear existing content
+
+                for (let key = startIndex; key < endIndex; key++) {
                     var goods_id = data[key]['id'];
-                    var goods_name = data[key]['name'];
                     var goods_name = data[key]['name'];
                     var goods_del_price = data[key]['del_price'];
                     var goods_price = data[key]['price'];
                     var goods_img = data[key]['img'];
-        
+
                     var col = document.createElement("div");
                     col.className = 'col mb-5';
                     var card = document.createElement("div");
@@ -238,44 +220,51 @@
                     var card_img_top = document.createElement("img");
                     card_img_top.className = 'card-img-top';
                     card_img_top.src = "https:" + goods_img;
-        
+
                     var card_body = document.createElement("div");
                     card_body.className = 'card-body p-4';
                     var text_center = document.createElement("div");
                     text_center.className = 'text-center';
-        
+                    
                     var fw_bolder = document.createElement("h5");
                     fw_bolder.className = 'fw-bolder';
                     fw_bolder.innerText = goods_name;
+
+                     var discount = document.createElement("h5");
+                    discount.className  = 'text-danger fw-bold ';
+                    var rate = 100 - ((100 * goods_price) / goods_del_price);
+                    discount.innerText = Math.floor(rate) + "%";
+                    if (rate === 0) {
+                        discount.innerHTML = "";
+                    }
+
                     var text_muted = document.createElement("span");
                     text_muted.className = 'text-muted text-decoration-line-through';
-                    text_muted.innerHTML = goods_del_price;
                     var text_unmuted = document.createElement("span");
-                    text_unmuted.innerHTML = goods_price;
+                    if (goods_del_price === goods_price) {
+                        text_muted.innerHTML = "";
+                        text_unmuted.innerHTML = numberWithCommas(goods_del_price) + "원"
+                    } else {
+                        text_muted.innerHTML = numberWithCommas(goods_del_price) + "원";
+                        text_unmuted.innerHTML = "&nbsp&nbsp" + numberWithCommas(goods_price) + "원";
+                    }
 
                     var card_footer = document.createElement("div");
                     card_footer.className = 'card-footer p-4 pt-0 border-top-0 bg-transparent';
                     var btn_outline_dark = document.createElement("a");
                     btn_outline_dark.className = 'btn btn-outline-dark mt-auto';
 
-                    console.log(document.getElementsByClassName('btn btn-outline-dark mt-auto'))
-                    document.querySelectorAll(".btn btn-outline-dark mt-auto").setAttribute('href','/goods_detail.html');
-                    document.getElementsByClassName('btn btn-outline-dark mt-auto').setAttribute('href','/goods_detail.html');
-                    btn_outline_dark.setAttribute('href','goods_detail.html');
+
+                    var card_footer = document.createElement("div");
+                    card_footer.className = 'card-footer p-4 pt-0 border-top-0 bg-transparent';
+                    var btn_outline_dark = document.createElement("a");
+                    btn_outline_dark.className = 'btn btn-outline-dark mt-auto';
+                    btn_outline_dark.setAttribute('href','chart.html?goods_id='+goods_id);
                     btn_outline_dark.setAttribute('target', '_self');
-                    btn_outline_dark.setAttribute('id', 'detail');
-                    btn_outline_dark.setAttribute('type','submit');
-                    btn_outline_dark.setAttribute('data-value', goods_id);
-                    btn_outline_dark.innerText = "more detail";
-                    
-                    // var list, index;
-                    // list = document.getElementsByClassName("btn btn-outline-dark mt-auto");
-                    // for (index = 0; index < list.length; ++index) {
-                    //     list[index].setAttribute('href','/goods_detail.html');
-                    // }
-                    
+                    btn_outline_dark.innerText = "more detail";                
                     
                     text_center.appendChild(fw_bolder);
+                    text_center.appendChild(discount);
                     text_center.appendChild(text_muted);
                     text_center.appendChild(text_unmuted);
                     card_body.appendChild(text_center);
@@ -287,13 +276,95 @@
                     col.appendChild(card);
                     goodstbody.appendChild(col);
                 }
-                
+            }
+
+            // Function to render the page number buttons
+            function renderPageNumbers(currentPage, totalPages) {
+                const pageNumbersDiv = document.getElementById("pageNumbers");
+                pageNumbersDiv.innerHTML = '';
+
+                const startPage = Math.max(1, currentPage - 2);
+                const endPage = Math.min(totalPages, currentPage + 2);
+
+                const prevButton = document.createElement("button");
+                prevButton.className = "btn mx-1";
+                prevButton.innerText = "<";
+                prevButton.addEventListener("click", () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderPage(currentPage, itemsPerPage, data);
+                        renderPageNumbers(currentPage, totalPages);
+                    }
+                });
+
+                const nextButton = document.createElement("button");
+                nextButton.className = "btn mx-1";
+                nextButton.innerText = ">";
+                nextButton.addEventListener("click", () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderPage(currentPage, itemsPerPage, data);
+                        renderPageNumbers(currentPage, totalPages);
+                    }
+                });
+
+                const firstPageButton = document.createElement("button");
+                firstPageButton.className = "btn mx-1";
+                firstPageButton.innerText = "<<";
+                firstPageButton.addEventListener("click", () => {
+                    if (currentPage !== 1) {
+                        currentPage = 1;
+                        renderPage(currentPage, itemsPerPage, data);
+                        renderPageNumbers(currentPage, totalPages);
+                    }
+                });
+
+                const lastPageButton = document.createElement("button");
+                lastPageButton.className = "btn mx-1";
+                lastPageButton.innerText = ">>";
+                lastPageButton.addEventListener("click", () => {
+                    if (currentPage !== totalPages) {
+                        currentPage = totalPages;
+                        renderPage(currentPage, itemsPerPage, data);
+                        renderPageNumbers(currentPage, totalPages);
+                    }
+                });
+
+                pageNumbersDiv.appendChild(firstPageButton);
+                pageNumbersDiv.appendChild(prevButton);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageNumberButton = document.createElement("button");
+                    pageNumberButton.className = "btn mx-1 btn-outline-dark border-0";
+                    pageNumberButton.innerText = i;
+                    pageNumberButton.addEventListener("click", () => {
+                        currentPage = i;
+                        renderPage(currentPage, itemsPerPage, data);
+                        renderPageNumbers(currentPage, totalPages);
+                    });
+
+                    if (i === currentPage) {
+                        pageNumberButton.classList.add("active");
+                    }
+                    pageNumbersDiv.appendChild(pageNumberButton);
+                }
+                pageNumbersDiv.appendChild(nextButton);
+                pageNumbersDiv.appendChild(lastPageButton);
+            }
+
+            // Load initial data and render the first page
+            (async () => {
+                var url = "http://mpt-api-server.com/goods";
+                data = await fetch(url).then(response => response.json());
+                const totalPages = Math.ceil(data.length / itemsPerPage);
+                renderPage(1, itemsPerPage, data);
+                renderPageNumbers(1, totalPages);
             })();
-        
+
         </script>
         
         <!-- Footer-->
-        <footer class="py-5 bg-dark">
+        <footer class="py-5 bg-light">
             <div class="container"><p class="m-0 text-center text-primary">Copyright &copy; Your Website 2023</p></div>
         </footer>
         <!-- Bootstrap core JS-->
